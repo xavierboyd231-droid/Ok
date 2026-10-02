@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arcade Hub | Unblocked Games</title>
+    <style>
+        :root {
+            --bg-deep: #0b0f19;
+            --surface: #131b2e;
+            --surface-hover: #1e293b;
+            --accent: #6366f1;
+            --accent-glow: rgba(99, 102, 241, 0.3);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border: #1e293b;
+        }
+
+        * { box-sizing: border-box; font-family: system-ui, -apple-system, sans-serif; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Top Navigation Header */
+        header {
+            background: rgba(19, 27, 46, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #818cf8, #c084fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px 16px 10px 40px;
+            background: #0b0f19;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .search-bar:focus { border-color: var(--accent); box-shadow: 0 0 15px var(--accent-glow); }
+
+        .search-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            pointer-events: none;
+        }
+
+        /* Main Workspace Container */
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 40px;
+            flex: 1;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Multi-Row Clean Grid Layout */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .game-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+        }
+        .game-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--accent);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .game-thumb {
+            width: 100%;
+            height: 140px;
+            background-size: cover;
+            background-position: center;
+            background-color: #0b0f19;
+        }
+
+        .game-details {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .game-title {
+            font-weight: 700;
+            font-size: 1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .game-category {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* In-Browser Game Player View */
+        #playerContainer {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            flex: 1;
+            gap: 15px;
+            padding: 30px 40px;
+        }
+
+        .player-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--surface);
+            padding: 12px 24px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .frame-box {
+            width: 100%;
+            height: 78vh;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        iframe { width: 100%; height: 100%; border: none; }
+
+        .btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+        .btn:hover { background: #4f46e5; }
+    </style>
+</head>
+<body>
+
+    <!-- Header with Search Bar on the Top Right -->
+    <header>
+        <div class="logo">
+            <span>⚡</span> Arcade Hub
+        </div>
+        <div class="search-container">
+            <span class="search-icon">🔍</span>
+            <input type="text" class="search-bar" id="searchBox" placeholder="Search games..." onkeyup="filterGames()">
+        </div>
+    </header>
+
+    <!-- Main Multi-Row Grid View -->
+    <div class="main-container" id="arcadeContainer">
+        <div class="section-title">🔥 Featured & Popular Games</div>
+        <div class="games-grid" id="gamesGrid"></div>
+    </div>
+
+    <!-- Active In-Browser Game Player -->
+    <div id="playerContainer">
+        <div class="player-nav">
+            <button class="btn" onclick="returnToArcade()">← Back to Library</button>
+            <div id="playingTitle" style="font-weight: 700; font-size: 1.1rem;"></div>
+            <button class="btn" onclick="toggleFullscreen()">🖵 Fullscreen</button>
+        </div>
+        <div class="frame-box" id="frameBox">
+            <iframe id="gameFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <script>
+        // Expanded game library featuring clean, recognizable game artwork thumbnails
+        const gamesList = [
+            { name: "Basketball Legends", cat: "Sports", img: "https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&q=80", url: "https://basketbros.io/" },
+            { name: "Retro Bowl", cat: "Sports", img: "https://images.unsplash.com/photo-1566951324795-67c30982e56e?w=600&q=80", url: "https://retrobowl.me/" },
+            { name: "Slope", cat: "Arcade", img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&q=80", url: "https://kdata1.com/2020/10/slope/" },
+            { name: "Boxing Random", cat: "Sports", img: "https://images.unsplash.com/photo-1549719386-74dfcbf7dbed?w=600&q=80", url: "https://boxingrandom.io/" },
+            { name: "Soccer Random", cat: "Sports", img: "https://images.unsplash.com/photo-1508098682722-e99c43a406b2?w=600&q=80", url: "https://soccer-random.io/" },
+            { name: "Moto X3M", cat: "Racing", img: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=600&q=80", url: "https://images-opensocial.googleusercontent.com/gadgets/ifr?url=https://cdn.jsdelivr.net/gh/classroom6x/classroom6x.github.io@master/moto-x3m/index.xml" },
+            { name: "Drift Hunters", cat: "Racing", img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&q=80", url: "https://drifthunters.co/" },
+            { name: "Smash Karts", cat: "Action", img: "https://images.unsplash.com/photo-1511919884226-fd3cad34687c?w=600&q=80", url: "https://smashkarts.io/" },
+            { name: "Shell Shockers", cat: "Action", img: "https://images.unsplash.com/photo-1563089145-599997674d42?w=600&q=80", url: "https://shellshock.io/" },
+            { name: "Cookie Clicker", cat: "Puzzle", img: "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=600&q=80", url: "https://orteil.dashnet.org/cookieclicker/" },
+            { name: "Subway Surfers", cat: "Runner", img: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&q=80", url: "https://subwaysurfers.com/" },
+            { name: "Tunnel Rush", cat: "Arcade", img: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?w=600&q=80", url: "https://tunnelrush.co/" }
+        ];
+
+        function renderGamesGrid(filter = "") {
+            const grid = document.getElementById('gamesGrid');
+            grid.innerHTML = "";
+
+            const matches = gamesList.filter(g => g.name.toLowerCase().includes(filter) || g.cat.toLowerCase().includes(filter));
+            
+            matches.forEach(game => {
+                const card = document.createElement('div');
+                card.className = "game-card";
+                card.onclick = () => launchGame(game);
+                card.innerHTML = `
+                    <div class="game-thumb" style="background-image: url('${game.img}')"></div>
+                    <div class="game-details">
+                        <div class="game-title">${game.name}</div>
+                        <div class="game-category">${game.cat}</div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function filterGames() {
+            const query = document.getElementById('searchBox').value.toLowerCase();
+            renderGamesGrid(query);
+        }
+
+        function launchGame(game) {
+            document.getElementById('arcadeContainer').style.display = 'none';
+            document.getElementById('playerContainer').style.display = 'flex';
+            document.getElementById('playingTitle').innerText = game.name;
+            document.getElementById('gameFrame').src = game.url;
+        }
+
+        function returnToArcade() {
+            document.getElementById('playerContainer').style.display = 'none';
+            document.getElementById('arcadeContainer').style.display = 'flex';
+            document.getElementById('gameFrame').src = "";
+        }
+
+        function toggleFullscreen() {
+            const frame = document.getElementById('frameBox');
+            if (!document.fullscreenElement) {
+                frame.requestFullscreen().catch(err => alert(err.message));
+            } else {
+                document.exitFullscreen();
+            }
+        }
+
+        // Initialize grid on load
+        renderGamesGrid();
+    </script>
+</body>
+</html>
